@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href='static/css/custom.css' rel="stylesheet" type="text/css">
+    <script src="static/js/jquery-3.3.1.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="options-box">
+        <h1>Artisan Delicacies</h1>
+        <div>
+          <input id="show-listings" type="button" value="Show Filtered">
+          <input id="hide-listings" type="button" value="Filter Locations">
+            <button data-bind="click: update">Update</button>
+
+
+          <ul data-bind="foreach: markerList" style="list-style-type:none">
+              <div data-bind="text: displayTitle , click: $parent.toggle"> ✔ </div>
+          </ul>
+
+
+
+
+        </div>
+      </div>
+      <div id="map"></div>
+    </div>
+
+    <script src="http://knockoutjs.com/downloads/knockout-3.5.0beta.js"></script>
+    <script src="static/js/custom_map.js" type="text/javascript"></script>
+    <script async defer
+        src=
+        "https://maps.googleapis.com/maps/api/js?key=AIzaSyBdR6eYzO7qZagG3nz2FBfhAL5jmyH3C6Q&v=3&callback=initMap">
+    </script>
+
+  </body>
+</html>
+
+
+
+
