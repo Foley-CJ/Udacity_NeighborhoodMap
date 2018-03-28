@@ -9,18 +9,10 @@
       <div class="options-box">
         <h1>Artisan Delicacies</h1>
         <div>
-          <input id="show-listings" type="button" value="Show Filtered">
-          <input id="hide-listings" type="button" value="Filter Locations">
-            <button data-bind="click: update">Update</button>
-
-
+          <button data-bind="click: update">Filter Markers</button>
           <ul data-bind="foreach: markerList" style="list-style-type:none">
               <div data-bind="text: displayTitle , click: $parent.toggle"> ✔ </div>
           </ul>
-
-
-
-
         </div>
       </div>
       <div id="map"></div>
@@ -32,6 +24,9 @@
         src=
         "https://maps.googleapis.com/maps/api/js?key=AIzaSyBdR6eYzO7qZagG3nz2FBfhAL5jmyH3C6Q&v=3&callback=initMap">
     </script>
+
+  <script>
+  </script>
 
   </body>
 </html>

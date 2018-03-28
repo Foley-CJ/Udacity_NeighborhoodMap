@@ -46,6 +46,7 @@ function initMap() {
     // Create an onclick event to open the large infowindow at each marker.
     marker.addListener('click', function() {
       populateInfoWindow(this, largeInfowindow);
+      console.log("Large Window Click")
     });
     // Two event listeners - one for mouseover, one for mouseout,
     // to change the colors back and forth.
@@ -68,11 +69,38 @@ function initMap() {
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
 function populateInfoWindow(marker, infowindow) {
+
+
+
+
+
+
+
+
   // Check to make sure the infowindow is not already opened on this marker.
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
-    infowindow.setContent('<div>' + marker.title + '</div>');
-    infowindow.open(map, marker);
+    lat = marker.position.lat()
+    lng = marker.position.lng()
+
+    // Send request ajax request to internal yelp data request handler
+    $.ajax("yelp",{
+        data : JSON.stringify({'lat':lat,
+                               'lng':lng}),
+        contentType : 'application/json',
+        type: 'POST',
+        success: function(data){
+            infowindow.marker = marker
+            var data = JSON.parse(data)
+            content = '<p style="font-weight:bold">' + marker.title + '</p>'
+            content += '<img src="'+ data.image + '" alt="Image not found" style="width:85px;height:60px;">'
+            content += '<p> Rating: '+ data.rating + '</p>'
+            content += '<p> Type: ' + data.cuisine + '</p>'
+            infowindow.setContent(content)
+            infowindow.open(map, marker);
+        }
+    });
+
     // Make sure the marker property is cleared if the infowindow is closed.
     infowindow.addListener('closeclick', function() {
       infowindow.marker = null;
@@ -113,16 +141,7 @@ function makeMarkerIcon(markerColor) {
 
 };
 
-
-
-
-
-
-
-
-
-
-
+// This is the list of our data markers with their lat long, address, and title.
 var locations = [
     {title: "Teshima's Restaurant",
      location: {lat: 19.5418234, lng: -155.9284432},
@@ -146,7 +165,7 @@ var locations = [
      filterState: true}
 ];
 
-
+// This is the KO restaurant object used to populate the filter list
 var Restaurant = function(data) {
     this.title = ko.observable(data.title);
     this.displayTitle = ko.observable(data.displayTitle);
@@ -156,8 +175,7 @@ var Restaurant = function(data) {
     this.filterState = ko.observable(data.filterState);
 };
 
-
-
+// This is the function to build the model based on the locations and Restaurant object
 function buildModel(restaurantRawData){
     var restaurants=[];
     var idCnt = 0;
@@ -177,12 +195,15 @@ function buildModel(restaurantRawData){
     return restaurants
 };
 
+
+// This initializes the restaurants
 var initialRestaurants = buildModel(locations);
 
-
-
+// This sets the inital filter status to closed
 var filterStatus = false;
 
+
+// This is a toggle function that will convert the boolean operate to the other status
 function filterToggle(entity){
     if (entity){
         entity = false
@@ -193,13 +214,15 @@ function filterToggle(entity){
 return entity
 }
 
-
+// This is the view model
 var ViewModel = function() {
     var self = this;
 
+    // Builds the marker list for the filter
     self.markerList = ko.observableArray(initialRestaurants);
     console.log(initialRestaurants)
 
+    // Sets a toggle function for the display
     this.toggle = function(location){
         console.log(location.title())
         if(filterStatus == true){
@@ -207,29 +230,21 @@ var ViewModel = function() {
             self.displayFilter(location)
         };
 
-        //    var marker = markers[location.id]
-        //    if (marker.map == null){
-        //        marker.setMap(map)
-        //        //location.title = "Bob"
-        //        console.log(self.markerList)
-        //    } else {
-        //        marker.setMap(null)
-        //    }
+
 
       }
 
-
+    // Updates the filter list with a display showcasing the status
     self.displayFilter = function(item) {
         if(item.filterState()){
             item.displayTitle(item.title() +  '  ✅')
         } else{
             item.displayTitle(item.title() +  '  ❌')
         };
-        //console.log(item)
 
     }
 
-
+    // Runs the filtering update logic upon filter closing
     self.update = function () {
         filterStatus = filterToggle(filterStatus)
         if(filterStatus){
@@ -256,38 +271,3 @@ var ViewModel = function() {
 };
 
 ko.applyBindings(new ViewModel());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//var ViewModel = function() {
-//  var self = this;
-//
-//  this.markerList = ko.observableArray(locations);
-//
-//  this.toggle = function(location){
-//
-//    var marker = markers[location.id]
-//    if (marker.map == null){
-//        marker.setMap(map)
-//        //location.title = "Bob"
-//        console.log(self.markerList)
-//    } else {
-//        marker.setMap(null)
-//    }
-//  }
-//};
-//
-//ko.applyBindings(new ViewModel());
