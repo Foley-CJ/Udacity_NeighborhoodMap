@@ -18,9 +18,13 @@ def worker():
     print("post sent: ", data['lat'], data['lng'])
     try:
         yelpResponse = yelp_query(data['lat'], data['lng'])
-        #yelpResponse = {'rating': 'unknown', 'image': 'https://vignette.wikia.nocookie.net/canadians-vs-vampires/images/a/a4/Not_available_icon.jpg/revision/latest?cb=20130403054528', 'cuisine': 'unknown'}
     except:
-        yelpResponse = {'rating': 'unknown', 'image': 'https://vignette.wikia.nocookie.net/canadians-vs-vampires/images/a/a4/Not_available_icon.jpg/revision/latest?cb=20130403054528', 'cuisine': 'unknown'}
+        yelpResponse = {'rating': 'unknown',
+                        'image': 'https://vignette.wikia.nocookie.net/canadians'
+                                 '-vs-vampires/images/a/a4/'
+                                 'Not_available_icon.jpg/revision/'
+                                 'latest?cb=20130403054528',
+                        'cuisine': 'unknown'}
     return json.dumps(yelpResponse)
 
 
@@ -29,7 +33,9 @@ def worker():
 
 def yelp_query(lat, long):
 
-    api_key = "CzbQs9vTEd0_catRjf3HMwr1QDfi4zeuTlezCPq_gNxCDXyjneoweRhe8krEz8ulMooOOWQU7rJmKPSe383d4m_QVVQOW9SGqBwg0UgiJJdvKNApR2KBWW8lWpO2WnYx"
+    api_key = "CzbQs9vTEd0_catRjf3HMwr1QDfi4zeuTlezCPq_gNxCDXyjneowe" \
+              "Rhe8krEz8ulMooOOWQU7rJmKPSe383d4m_Q" \
+              "VVQOW9SGqBwg0UgiJJdvKNApR2KBWW8lWpO2WnYx"
     host = 'https://api.yelp.com'
     path = '/v3/businesses/search'
 
