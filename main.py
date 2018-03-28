@@ -1,19 +1,20 @@
 from flask import (Flask, render_template, request)
 import requests
+import json
 from urllib import quote
 
 app = Flask(__name__, template_folder="templates")
+
 
 @app.route("/")
 def hello():
     return render_template('index.html')
 
 
-import json
-
-
 @app.route("/yelp", methods = ['POST'])
 def worker():
+    """ Orchestrator function to interact between yelp and ajax post"""
+
     data = request.get_json()
     print("post sent: ", data['lat'], data['lng'])
     try:
@@ -28,10 +29,8 @@ def worker():
     return json.dumps(yelpResponse)
 
 
-
-
-
 def yelp_query(lat, long):
+    """ Function to hit yelp api end point"""
 
     api_key = "CzbQs9vTEd0_catRjf3HMwr1QDfi4zeuTlezCPq_gNxCDXyjneowe" \
               "Rhe8krEz8ulMooOOWQU7rJmKPSe383d4m_Q" \
@@ -52,21 +51,13 @@ def yelp_query(lat, long):
         'limit': 1
     }
 
-
     response = requests.request('GET', url, headers=headers, params=url_params)
 
-    firstDataSet = response.json().get('businesses')[0]
-    print "=================================="
-    rating = firstDataSet.get('rating')
-    image = firstDataSet.get('image_url')
-    cuisine = firstDataSet.get('categories')[0].get('title')
-    print "=================================="
+    first_data_set = response.json().get('businesses')[0]
+    rating = first_data_set.get('rating')
+    image = first_data_set.get('image_url')
+    cuisine = first_data_set.get('categories')[0].get('title')
     return {'rating': rating, 'image': image, 'cuisine': cuisine}
-
-
-
-
-
 
 
 if __name__ == '__main__':
