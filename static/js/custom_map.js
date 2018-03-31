@@ -3,8 +3,20 @@ var map;
 // Create a new blank array for all the listing markers.
 var markers = [];
 
+// Handle error if google map fails to respond properly
+function googleMapError(){
+    console.log("error handle");
+
+    errMsg = "</br></br> <h1> Failed to Load Google Map Api </h1><h3> Sorry for the inconvience try back later</h3>";
+
+    document.getElementById('map').innerHTML=errMsg;
+    //map.content = "<h2> google map failed to load </h2>"
+    //map.value = "Failed to Load"
+}
 
 
+
+// Generate the google map upon successful api google load
 function initMap() {
 
   // Constructor creates a new map - only center and zoom are required.
@@ -27,6 +39,13 @@ function initMap() {
   // mouses over the marker.
   var highlightedIcon = makeMarkerIcon('FFFF24');
 
+
+  // Create a "clicked location" marker color for when the user
+  // click on the marker.
+  var clickedIcon = makeMarkerIcon('FFF');
+
+
+
   var largeInfowindow = new google.maps.InfoWindow();
   // The following group uses the location array to create an array of markers on initialize.
   for (var i = 0; i < locations.length; i++) {
@@ -48,7 +67,7 @@ function initMap() {
       populateInfoWindow(this, largeInfowindow);
       console.log("Large Window Click")
     });
-    // Two event listeners - one for mouseover, one for mouseout,
+    // Three event listeners - one for mouseover, one for mouseout, one for click
     // to change the colors back and forth.
     marker.addListener('mouseover', function() {
       this.setIcon(highlightedIcon);
@@ -57,25 +76,19 @@ function initMap() {
       this.setIcon(defaultIcon);
     });
 
+    marker.addListener('click', function() {
+      this.setIcon(clickedIcon);
+    });
+
     showListings();
   }
-//
-//  document.getElementById('reveal-filter').addEventListener('click', filterToggle);
-  document.getElementById('show-listings').addEventListener('click', showListings);
-  document.getElementById('hide-listings').addEventListener('click', hideListings);
 }
+
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
 function populateInfoWindow(marker, infowindow) {
-
-
-
-
-
-
-
 
   // Check to make sure the infowindow is not already opened on this marker.
   if (infowindow.marker != marker) {
