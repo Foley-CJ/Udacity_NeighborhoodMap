@@ -235,12 +235,17 @@ var ViewModel = function() {
     self.markerList = ko.observableArray(initialRestaurants);
     console.log(initialRestaurants)
 
-    // Sets a toggle function for the display
+    // Interacts with the list when it is clicked on
     this.toggle = function(location){
         console.log(location.title())
+        //Sets filter behavior
         if(filterStatus == true){
             location.filterState(filterToggle(location.filterState()))
             self.displayFilter(location)
+        } else {
+        //Sets non-filter behavior to link clicks
+        var curMarker = markers[location.id()]
+        google.maps.event.trigger(curMarker, 'click');
         };
 
 
